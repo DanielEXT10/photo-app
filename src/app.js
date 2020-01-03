@@ -3,14 +3,15 @@ const multer = require('multer');
 const ejs = require('ejs');
 const path = require('path');
 const uuidv4 = require('uuid/v4');
-
+const morgan = require('morgan');
 
 const storage = multer.diskStorage({
-    filename: (req, file, cb)=>{
+    filename: (req, file, cb) => {
         cb(null, file.originalname);
     },
-     destination: 'src/public/uploads'
+    destination: 'src/public/uploads'
 });
+
 // Initializations 
 
 const app = express();
@@ -22,20 +23,18 @@ app.set('view engine', 'ejs');
 
 // Middlewares
 
-app.use(multer({
+app.use(morgan('dev'));
+app.use(express.urlencoded({extended: false}));
+
+const upload = multer({
     storage,
-    dest: 'src/public/uploads'
-}).single('image'));
+    dest: 'src/public/uploads',
+    limits:{ fileSize: 1000000}
+}).single('image')
 
+app.use(upload);
 // Routes
-app.get('/', (req,res)=>{
- res.render('index')
-});
-
-app.post('/upload', (req,res)=>{
-    console.log(req.file);
-    res.send('Uploaded');
-})
+app.use(require('./routes/index'));
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
 // Start server
