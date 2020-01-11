@@ -3,6 +3,7 @@ const router = Router();
 const multer = require('multer');
 const path = require('path');
 
+const Image = require('../models/image');
 
 
 router.get('/', (req, res) => {
@@ -12,9 +13,21 @@ router.get('/', (req, res) => {
 router.get('/upload', (req, res)=>{
     res.render('upload')
 });
-router.post('/upload',  (req, res) => {
-    console.log(req.file);
-    res.send('Uploaded');
+router.post('/upload', async (req, res) => {
+    
+    const image = new Image();
+    image.title= req.body.title;
+    image.description= req.body.description;
+    image.filename = req.file.filename;
+    image.path = '/uploads/' + req.file.filename;
+    image.originalname = req.file.originalname;
+    image.mimetype = req.file.mimetype;
+    image.size= req.file.size; 
+
+    console.log(image);
+    await image.save()
+
+    res.redirect('/');
 });
 
 router.get('/image/:id', (req,res)=>{
