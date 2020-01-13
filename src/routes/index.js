@@ -6,8 +6,8 @@ const path = require('path');
 const Image = require('../models/image');
 
 
-router.get('/', (req, res) => {
-    res.render('index')
+router.get('/', async (req, res) => {
+    const images = await Image.find();
 });
 
 router.get('/upload', (req, res)=>{
