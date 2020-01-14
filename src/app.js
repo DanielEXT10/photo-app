@@ -37,6 +37,7 @@ app.use(upload);
 app.use(require('./routes/index'));
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+
 // Start server
 app.listen(app.get('port'), ()=>{
     console.log(`Server on port ${app.get('port')}`);
